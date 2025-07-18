@@ -1,6 +1,6 @@
-The backend is [here](https://github.com/dapin93/Asistente-IA-Back).
+El backend está [aquí](https://github.com/dapin93/Asistente-IA-Back).
 
-Start the development server with
+Inicia el servidor de desarrollo con:
 ```
 yarn
 yarn dev
