@@ -1,17 +1,23 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useChat } from "../hooks/useChat";
 
 export const UI = ({ hidden }) => {
   const input = useRef();
-  const { chat, loading, cameraZoomed, setCameraZoomed, message, messages = [] } = useChat();
+  const messagesEndRef = useRef(null);
+  const { chat, loading, cameraZoomed, setCameraZoomed, message, messageHistory = [] } = useChat();
 
   const sendMessage = () => {
     const text = input.current.value;
-    if (!loading && !message && text.trim()) {
+    if (!loading && text.trim()) {
       chat(text.trim());
       input.current.value = "";
     }
   };
+
+  // Auto-scroll al último mensaje
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messageHistory]);
 
   if (hidden) return null;
 
@@ -20,17 +26,32 @@ export const UI = ({ hidden }) => {
       {/* Logo arriba izquierda */}
       <div className="absolute top-4 left-4 backdrop-blur-md bg-white bg-opacity-50 p-4 rounded-lg pointer-events-auto">
         <img src="https://www.usc.edu.co/wp-content/uploads/2023/05/logo-USC.png.webp" alt="USC Logo" className="h-20" />
-        <h1 className="font-black text-xl">-</h1>
+        <h2 className="font-black text-l">Asistente</h2>
+        <h4 className="font-black text-l">Virtual</h4>
         <p>By JägerOwl</p>
       </div>
 
       {/* Caja scroll de mensajes a la izquierda */}
-      <div className="absolute bottom-28 left-4 w-[400px] max-w-full h-[300px] overflow-y-auto p-4 rounded-md bg-white bg-opacity-40 backdrop-blur-md pointer-events-auto text-sm space-y-2">
-        {messages.map((msg, idx) => (
-          <div key={idx} className={`p-2 rounded ${msg.role === 'user' ? 'bg-blue-100 text-right' : 'bg-gray-100 text-left'}`}>
-            <strong>{msg.role === 'user' ? 'Tú' : 'Bot'}:</strong> {msg.content}
+      <div className="absolute bottom-20 left-4 w-[400px] max-w-full h-[300px] overflow-y-auto p-4 rounded-xl bg-black bg-opacity-60 backdrop-blur-md pointer-events-auto text-sm space-y-3 ">
+        {messageHistory.length === 0 ? (
+          <div className="text-gray-400 italic text-center py-8">
+            No hay mensajes aún. ¡Escribe algo para comenzar!
           </div>
-        ))}
+        ) : (
+          messageHistory.map((msg, idx) => (
+            <div key={idx} className={`p-3 rounded-lg ${msg.role === 'user' ? 'bg-blue-900 bg-opacity-40 text-right ml-8' : 'bg-gray-800 bg-opacity-50 text-left mr-8'}`}>
+              <div className="mb-1">
+                <strong className={`text-xs font-semibold ${msg.role === 'user' ? 'text-blue-300' : 'text-green-300'}`}>
+                  {msg.role === 'user' ? 'Tú' : 'Asistente'}
+                </strong>
+              </div>
+              <div className="text-white">
+                {msg.content}
+              </div>
+            </div>
+          ))
+        )}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Input de texto debajo del historial */}
@@ -44,13 +65,13 @@ export const UI = ({ hidden }) => {
           }}
         />
         <button
-          disabled={loading || message}
+          disabled={loading}
           onClick={sendMessage}
           className={`bg-blue-900 hover:bg-blue-800 text-white p-4 px-6 font-semibold uppercase rounded-md ${
-            loading || message ? "cursor-not-allowed opacity-30" : ""
+            loading ? "cursor-not-allowed opacity-30" : ""
           }`}
         >
-          Enviar
+          {loading ? "..." : "Enviar"}
         </button>
       </div>
 
