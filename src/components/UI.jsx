@@ -24,11 +24,10 @@ export const UI = ({ hidden }) => {
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 z-10 pointer-events-none">
       {/* Logo arriba izquierda */}
-      <div className="absolute top-4 left-4 backdrop-blur-md bg-white bg-opacity-50 p-4 rounded-lg pointer-events-auto">
-        <img src="https://www.usc.edu.co/wp-content/uploads/2023/05/logo-USC.png.webp" alt="USC Logo" className="h-20" />
-        <h2 className="font-black text-l">Asistente</h2>
-        <h4 className="font-black text-l">Virtual</h4>
-        <p>By JägerOwl</p>
+      <div className="absolute top-4 left-4 backdrop-blur-md bg-white bg-opacity-0 p-4 rounded-lg pointer-events-auto">
+        <img src="JagerOwl.png" alt="USC Logo" className="h-50" />
+        <h2 className="font-black text-l text-gray-400 italic text-center py-0">Virtual Assistant</h2>
+        <p className=" text-s text-gray-400 text-center py-0">E.V.A.</p>
       </div>
 
       {/* Caja scroll de mensajes a la izquierda */}
